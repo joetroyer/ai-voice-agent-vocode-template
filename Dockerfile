@@ -21,7 +21,7 @@ RUN poetry lock
 # Commit poetry.lock back to GitHub
 RUN git config --global user.email "joetroyer@gmail.com" \
     && git config --global user.name "joetroyer" \
-    && git clone https://github.com/joetroyer/ai-voice-agent-vocode-template repo \
+    && git clone https://github.com/joetroyer/ai-voice-agent-vocode-template.git repo \
     && mv poetry.lock repo/poetry.lock \
     && cd repo \
     && git add poetry.lock \
