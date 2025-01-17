@@ -8,11 +8,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /code
 COPY ./pyproject.toml /code/pyproject.toml
-COPY ./poetry.lock /code/poetry.lock
 
 # Install Poetry and Python dependencies
 RUN pip install --no-cache-dir "poetry==1.5.1"
 RUN poetry config virtualenvs.create false
+RUN poetry lock  # Regenerate poetry.lock here
 RUN poetry install --no-dev --no-interaction --no-ansi -vvv
 
 # Copy application files
