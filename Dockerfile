@@ -19,9 +19,9 @@ RUN pip install --no-cache-dir "poetry==1.5.1"
 RUN poetry lock
 
 # Commit poetry.lock back to GitHub
-RUN git config --global user.email "your-email@example.com" \
-    && git config --global user.name "Your Name" \
-    && git clone <your-repository-url> repo \
+RUN git config --global user.email "joetroyer@gmail.com" \
+    && git config --global user.name "joetroyer" \
+    && git clone https://github.com/joetroyer/ai-voice-agent-vocode-template repo \
     && mv poetry.lock repo/poetry.lock \
     && cd repo \
     && git add poetry.lock \
