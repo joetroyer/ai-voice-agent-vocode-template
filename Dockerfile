@@ -4,15 +4,32 @@ FROM python:3.9-bullseye
 RUN apt-get update && apt-get install -y \
     libportaudio2 libportaudiocpp0 portaudio19-dev \
     libasound-dev libsndfile1-dev ffmpeg \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code
+
+# Copy the pyproject.toml file
 COPY ./pyproject.toml /code/pyproject.toml
 
-# Install Poetry and Python dependencies
+# Install Poetry
 RUN pip install --no-cache-dir "poetry==1.5.1"
+
+# Generate poetry.lock
+RUN poetry lock
+
+# Commit poetry.lock back to GitHub
+RUN git config --global user.email "your-email@example.com" \
+    && git config --global user.name "Your Name" \
+    && git clone <your-repository-url> repo \
+    && mv poetry.lock repo/poetry.lock \
+    && cd repo \
+    && git add poetry.lock \
+    && git commit -m "Regenerate poetry.lock from Docker build" \
+    && git push origin main
+
+# Install dependencies
 RUN poetry config virtualenvs.create false
-RUN poetry lock  # Regenerate poetry.lock here
 RUN poetry install --no-dev --no-interaction --no-ansi -vvv
 
 # Copy application files
