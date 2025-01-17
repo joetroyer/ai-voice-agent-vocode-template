@@ -4,32 +4,19 @@ FROM python:3.9-bullseye
 RUN apt-get update && apt-get install -y \
     libportaudio2 libportaudiocpp0 portaudio19-dev \
     libasound-dev libsndfile1-dev ffmpeg \
-    git \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code
 
-# Copy the pyproject.toml file
+# Copy pyproject.toml
 COPY ./pyproject.toml /code/pyproject.toml
 
 # Install Poetry
 RUN pip install --no-cache-dir "poetry==1.5.1"
 
-# Generate poetry.lock
-RUN poetry lock
-
-# Commit poetry.lock back to GitHub
-RUN git config --global user.email "joetroyer@gmail.com" \
-    && git config --global user.name "joetroyer" \
-    && git clone https://github.com/joetroyer/ai-voice-agent-vocode-template.git repo \
-    && mv poetry.lock repo/poetry.lock \
-    && cd repo \
-    && git add poetry.lock \
-    && git commit -m "Regenerate poetry.lock from Docker build" \
-    && git push origin main
-
-# Install dependencies
+# Generate poetry.lock and install dependencies
 RUN poetry config virtualenvs.create false
+RUN poetry lock
 RUN poetry install --no-dev --no-interaction --no-ansi -vvv
 
 # Copy application files
